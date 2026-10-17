@@ -1,16 +1,538 @@
-Create a premium, responsive personal portfolio website for a Google Ads specialist who helps US local service businesses generate qualified leads.
 
-Use HTML, CSS, and vanilla JavaScript. Make it easy to deploy on Cloudflare Pages.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1120">
+  <meta name="description" content="Google Ads specialist helping local service businesses generate qualified leads through campaign management, conversion tracking, GTM and GA4.">
+  <title>Google Ads Specialist | Lead Generation & Tracking</title>
 
-Design style: premium, clean, modern, dark navy background with white text and subtle green accents. Use smooth animations, strong typography, professional service cards, and responsive mobile navigation.
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #111a2b;
+      --text: #f5f7fb;
+      --muted: #a5b1c4;
+      --green: #6ee7a0;
+      --line: rgba(255,255,255,.12);
+    }
 
-Include these sections:
-1. Hero section with a clear headline and contact CTA.
-2. About me.
-3. Google Ads campaign management and lead generation services.
-4. GTM, GA4, conversion tracking, and Enhanced Conversions.
-5. Case studies with before-and-after results.
-6. My process.
-7. Contact section with email, LinkedIn, and Upwork links.
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 85px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1100px, 90%); margin: auto; }
+    .muted { color: var(--muted); }
+    .green { color: var(--green); }
 
-Use semantic HTML, accessible buttons, SEO metadata, and fast-loading CSS. Avoid fake testimonials, invented certifications, and unsupported claims. Put editable personal details and links in clearly marked places. Deliver a complete index.html file that works without a build process.
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(11,17,32,.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 25px; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: var(--green); }
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: .2s;
+    }
+    .btn-primary { background: var(--green); color: #07140d; }
+    .btn-primary:hover { background: #91f0b5; transform: translateY(-2px); }
+    .btn-outline { border: 1px solid var(--line); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+    .hero { padding: 105px 0 90px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .8fr;
+      align-items: center;
+      gap: 65px;
+    }
+    .eyebrow {
+      display: inline-block;
+      color: var(--green);
+      border: 1px solid rgba(110,231,160,.25);
+      background: rgba(110,231,160,.07);
+      border-radius: 50px;
+      padding: 6px 13px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(38px, 5.4vw, 65px);
+      line-height: 1.12;
+      letter-spacing: -2.5px;
+      margin-bottom: 24px;
+    }
+    .hero p { max-width: 610px; font-size: 17px; color: var(--muted); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-note { margin-top: 25px; font-size: 13px !important; }
+
+    .profile-card {
+      background: linear-gradient(145deg, #17253a, #101827);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 25px 70px rgba(0,0,0,.22);
+    }
+    .profile-icon {
+      width: 66px; height: 66px;
+      display: grid; place-items: center;
+      background: rgba(110,231,160,.12);
+      border: 1px solid rgba(110,231,160,.25);
+      color: var(--green);
+      font-size: 28px;
+      border-radius: 18px;
+      margin-bottom: 22px;
+    }
+    .profile-card h3 { font-size: 22px; margin-bottom: 5px; }
+    .profile-card p { font-size: 14px; }
+    .mini-list { list-style: none; margin-top: 23px; }
+    .mini-list li {
+      padding: 11px 0;
+      border-top: 1px solid var(--line);
+      color: #d7deea;
+      font-size: 14px;
+    }
+    .mini-list li::before { content: "✓"; color: var(--green); margin-right: 10px; }
+
+    section { padding: 82px 0; }
+    .section-head { max-width: 660px; margin-bottom: 38px; }
+    .section-label {
+      color: var(--green);
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 1.7px;
+    }
+    h2 { font-size: clamp(29px, 4vw, 42px); line-height: 1.2; margin: 10px 0 15px; letter-spacing: -1px; }
+    .section-head p, .about-text { color: var(--muted); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 55px; }
+    .about-text p + p { margin-top: 16px; }
+    .principles { display: grid; gap: 14px; }
+    .principle {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .principle strong { display: block; margin-bottom: 4px; }
+    .principle span { color: var(--muted); font-size: 14px; }
+
+    .services-grid, .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 25px;
+      transition: transform .2s, border-color .2s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(110,231,160,.45); }
+    .card-icon { font-size: 25px; margin-bottom: 16px; }
+    .card h3 { font-size: 18px; margin-bottom: 10px; }
+    .card p { color: var(--muted); font-size: 14px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; }
+    .tag {
+      border: 1px solid var(--line);
+      color: #c7d2e2;
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: 12px;
+    }
+
+    .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 24px;
+    }
+    .case-card .industry { color: var(--green); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .case-card h3 { font-size: 20px; margin: 10px 0; }
+    .case-card p { color: var(--muted); font-size: 14px; }
+    .case-stats { display: grid; gap: 10px; margin: 20px 0; }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .stat span { color: var(--muted); }
+    .case-disclaimer { font-size: 12px !important; }
+
+    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .step-number { color: var(--green); font-size: 13px; font-weight: 800; }
+    .step h3 { font-size: 17px; margin: 12px 0 8px; }
+    .step p { color: var(--muted); font-size: 14px; }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 40px;
+      align-items: center;
+      padding: 42px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(130deg, #14253a, #101827);
+    }
+    .contact-links { display: grid; gap: 12px; }
+    .contact-links a {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 12px 15px;
+      font-size: 14px;
+    }
+    .contact-links a:hover { border-color: var(--green); color: var(--green); }
+    footer { border-top: 1px solid var(--line); padding: 26px 0; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+    footer p { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 800px) {
+      .hero-grid, .about-grid, .contact-box { grid-template-columns: 1fr; }
+      .hero { padding: 75px 0 55px; }
+      .hero-grid { gap: 35px; }
+      .services-grid, .case-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-box { padding: 28px; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 76px; left: 0; right: 0;
+        padding: 22px 5%;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links.open { display: flex; }
+      .menu-btn { display: block; }
+      nav > .btn { display: none; }
+    }
+    @media (max-width: 520px) {
+      .services-grid, .case-grid, .process-grid { grid-template-columns: 1fr; }
+      h1 { letter-spacing: -1.5px; }
+      section { padding: 60px 0; }
+      .card, .case-card { padding: 21px; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="#home" class="logo">Google Ads<span>.</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">Menu ☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#results">Case Studies</a>
+        <a href="#process">My Process</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a class="btn btn-primary" href="#contact">Let's Talk ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Google Ads · Lead Generation · Tracking</div>
+        <h1>Turn Google Searches Into <span class="green">Real Leads.</span></h1>
+        <p>
+          I'm a Google Ads specialist helping local service businesses attract
+          high-intent customers, improve campaign performance, and track the
+          leads that matter.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Discuss Your Project ↗</a>
+          <a class="btn btn-outline" href="#results">View Case Studies ↓</a>
+        </div>
+        <p class="hero-note">Focused on qualified leads, reliable tracking, and better campaign decisions.</p>
+      </div>
+
+      <aside class="profile-card">
+        <div class="profile-icon">↗</div>
+        <h3>Google Ads Specialist</h3>
+        <p class="muted">Helping local businesses grow with data-driven PPC.</p>
+        <ul class="mini-list">
+          <li>Search campaign setup & optimization</li>
+          <li>Google Tag Manager & GA4</li>
+          <li>Conversion and call tracking</li>
+          <li>Enhanced Conversions</li>
+          <li>Lead quality and search-term analysis</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">About Me</span>
+        <h2>Better tracking. Smarter campaigns. <span class="green">More clarity.</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I help local service businesses use Google Ads more effectively.
+            My work covers campaign structure, keyword intent, ad messaging,
+            conversion tracking, and ongoing optimization.
+          </p>
+          <p>
+            I believe good optimization starts with accurate data. Before
+            making major campaign changes, I check whether calls and form
+            submissions are being tracked correctly.
+          </p>
+          <p>
+            My goal is to help businesses understand where their budget goes
+            and make better decisions based on meaningful results—not clicks alone.
+          </p>
+        </div>
+        <div class="principles">
+          <div class="principle">
+            <strong>01. Track what matters</strong>
+            <span>Verify calls, forms, and other meaningful conversion actions.</span>
+          </div>
+          <div class="principle">
+            <strong>02. Reach the right searches</strong>
+            <span>Review search intent, targeting, and irrelevant traffic.</span>
+          </div>
+          <div class="principle">
+            <strong>03. Improve with evidence</strong>
+            <span>Test meaningful changes and evaluate performance over time.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" style="background:#0e1626">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">What I Do</span>
+        <h2>Services built around <span class="green">business growth.</span></h2>
+        <p>Practical Google Ads management and measurement support for local service businesses.</p>
+      </div>
+      <div class="services-grid">
+        <article class="card">
+          <div class="card-icon">⌕</div>
+          <h3>Google Ads Management</h3>
+          <p>Campaign setup, keyword research, search-term reviews, negative keywords, ad optimization, and budget monitoring.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">◎</div>
+          <h3>Local Lead Generation</h3>
+          <p>Campaigns designed around local search intent, service areas, phone calls, and qualified inquiries.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">⌘</div>
+          <h3>Conversion Tracking</h3>
+          <p>Google Ads conversion actions for lead forms, calls, click-to-call buttons, and other key interactions.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">◈</div>
+          <h3>GTM & GA4 Setup</h3>
+          <p>Organized tags, triggers, events, and analytics configuration, followed by testing and validation.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">↗</div>
+          <h3>Enhanced Conversions</h3>
+          <p>Implementation support to improve conversion measurement when the website and data qualify.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">⌁</div>
+          <h3>Campaign Audits</h3>
+          <p>Review targeting, search terms, tracking, ads, landing pages, and wasted-spend opportunities.</p>
+        </article>
+      </div>
+      <div class="tag-list">
+        <span class="tag">Plumbing</span>
+        <span class="tag">Roofing</span>
+        <span class="tag">HVAC</span>
+        <span class="tag">Cleaning Services</span>
+        <span class="tag">PPC</span>
+        <span class="tag">GA4</span>
+        <span class="tag">GTM</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">Selected Work</span>
+        <h2>Campaign insights & <span class="green">case studies.</span></h2>
+        <p>Examples of the problems I investigate and the metrics I use to evaluate campaign performance.</p>
+      </div>
+
+      <div class="case-grid">
+        <article class="case-card">
+          <span class="industry">Local Service Business</span>
+          <h3>Campaign Optimization</h3>
+          <p>Reviewed keyword intent, search terms, location targeting, and conversion measurement to identify improvement opportunities.</p>
+          <div class="case-stats">
+            <div class="stat"><span>Primary focus</span><strong>Lead quality</strong></div>
+            <div class="stat"><span>Campaign review</span><strong>Search terms</strong></div>
+            <div class="stat"><span>Measurement</span><strong>Calls & forms</strong></div>
+          </div>
+          <p class="case-disclaimer">Add verified client results and reporting dates here before publishing.</p>
+        </article>
+
+        <article class="case-card">
+          <span class="industry">Conversion Tracking</span>
+          <h3>Measurement Audit</h3>
+          <p>Checked Google Ads, GTM, and GA4 configuration to find tracking gaps and improve confidence in reported conversions.</p>
+          <div class="case-stats">
+            <div class="stat"><span>Tools</span><strong>GTM + GA4</strong></div>
+            <div class="stat"><span>Validation</span><strong>Tag testing</strong></div>
+            <div class="stat"><span>Goal</span><strong>Reliable data</strong></div>
+          </div>
+          <p class="case-disclaimer">Document the actual issues found and the changes tested.</p>
+        </article>
+
+        <article class="case-card">
+          <span class="industry">PPC Strategy</span>
+          <h3>Search Intent Review</h3>
+          <p>Evaluated search queries, negative keywords, service relevance, and landing-page messaging to reduce irrelevant traffic.</p>
+          <div class="case-stats">
+            <div class="stat"><span>Focus</span><strong>Relevant searches</strong></div>
+            <div class="stat"><span>Review</span><strong>Keyword intent</strong></div>
+            <div class="stat"><span>Outcome</span><strong>Action plan</strong></div>
+          </div>
+          <p class="case-disclaimer">Replace this example with a real project you have permission to share.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" style="background:#0e1626">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">My Process</span>
+        <h2>A clear process from audit to <span class="green">optimization.</span></h2>
+      </div>
+      <div class="process-grid">
+        <article class="step">
+          <span class="step-number">STEP 01</span>
+          <h3>Audit</h3>
+          <p>Understand the business, campaign goals, current performance, and tracking setup.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">STEP 02</span>
+          <h3>Fix Measurement</h3>
+          <p>Test important conversion actions and address tracking issues where needed.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">STEP 03</span>
+          <h3>Optimize</h3>
+          <p>Improve targeting, keywords, ads, and landing-page alignment based on evidence.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">STEP 04</span>
+          <h3>Review</h3>
+          <p>Monitor performance, report findings, and decide what to test next.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="contact-box">
+        <div>
+          <span class="section-label">Get In Touch</span>
+          <h2>Let's discuss your <span class="green">Google Ads goals.</span></h2>
+          <p class="muted">
+            Need help with lead generation, campaign optimization, or conversion
+            tracking? Reach out to discuss your project and current challenges.
+          </p>
+          <div style="margin-top:25px">
+            <a class="btn btn-primary" href="mailto:muheuddin4077@gmail.com">Email Me ↗</a>
+          </div>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:muheuddin4077@gmail.com">✉ Email</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">↗ LinkedIn</a>
+          <a href="https://www.upwork.com/" target="_blank" rel="noopener noreferrer">↗ Upwork Profile</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <p>© <span id="year"></span> Google Ads Specialist. All rights reserved.</p>
+    <p>Built with a focus on clarity, measurement, and growth.</p>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const navLinks = document.getElementById("navLinks");
+
+  menuBtn.addEventListener("click", () => {
+    const open = navLinks.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(open));
+  });
+
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
